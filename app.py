@@ -13,16 +13,20 @@ st.set_page_config(
 UPLOAD_DIR = "uploaded_files"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-# 2. الهوية البصرية لجامعة الملك سعود والتصميم المتجاوب
+# 2. الهوية البصرية (خلفية بيضاء نقية ونصوص وتفاصيل باللون الأزرق KSU Blue)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
 
-    html, body, [class*="css"], .stMarkdown {
+    /* تلوين الصفحة والخلفيات باللون الأبيض الناصع والنصوص بالأزرق */
+    .stApp, html, body {
+        background-color: #ffffff !important;
         font-family: 'Tajawal', sans-serif !important;
         direction: rtl;
         text-align: right;
+        color: #00364d !important;
     }
+
     .block-container {
         padding-top: 1.8rem !important;
         padding-bottom: 3rem !important;
@@ -30,47 +34,60 @@ st.markdown("""
         padding-right: 1rem !important;
         max-width: 900px !important;
     }
+
+    /* الترويسة بخلفية بيضاء وإطار أزرق ملكي */
     .ksu-banner {
-        background: linear-gradient(135deg, #005980 0%, #00364d 100%);
+        background-color: #f8fafc !important;
+        border: 2px solid #005980;
         border-radius: 16px;
-        padding: 20px 16px;
-        color: #ffffff;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(0, 89, 128, 0.15);
+        padding: 22px 18px;
+        margin-bottom: 22px;
+        box-shadow: 0 4px 15px rgba(0, 89, 128, 0.08);
         border-bottom: 4px solid #C59B27;
         text-align: center;
     }
     .ksu-banner h1 {
-        font-size: 21px !important;
+        font-size: 22px !important;
         font-weight: 800;
         margin: 0 0 6px 0 !important;
-        color: #ffffff !important;
+        color: #005980 !important;
     }
     .ksu-banner p {
-        font-size: 13px !important;
+        font-size: 14px !important;
         margin: 0 !important;
-        color: #e2f1f8 !important;
+        color: #0284c7 !important;
+        font-weight: 500;
     }
+
+    /* بطاقة المقرر */
     .course-card {
-        background: #ffffff;
+        background: #ffffff !important;
         border-radius: 14px;
-        padding: 18px;
-        border: 1px solid #E2E8F0;
-        border-right: 5px solid #005980;
+        padding: 20px;
+        border: 1.5px solid #bae6fd;
+        border-right: 6px solid #005980;
         margin-bottom: 18px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        box-shadow: 0 2px 10px rgba(0, 89, 128, 0.05);
     }
     .course-card h2 {
-        font-size: 18px !important;
-        font-weight: 700;
+        font-size: 19px !important;
+        font-weight: 800;
         color: #005980 !important;
-        margin: 0 0 8px 0 !important;
+        margin: 0 0 10px 0 !important;
     }
+    .course-card p {
+        font-size: 14px !important;
+        color: #0f172a !important;
+        margin: 0 !important;
+        line-height: 1.7 !important;
+    }
+
+    /* الشارات التعريفية */
     .badge-gold {
         display: inline-block;
         background-color: #C59B27;
         color: #ffffff;
-        padding: 3px 10px;
+        padding: 4px 12px;
         border-radius: 6px;
         font-size: 12px;
         font-weight: 700;
@@ -81,29 +98,35 @@ st.markdown("""
         display: inline-block;
         background-color: #005980;
         color: #ffffff;
-        padding: 3px 10px;
+        padding: 4px 12px;
         border-radius: 6px;
         font-size: 12px;
         font-weight: 700;
         margin-bottom: 10px;
     }
-    .course-card p {
-        font-size: 13px !important;
-        color: #475569 !important;
-        margin: 0 !important;
-        line-height: 1.6 !important;
-    }
+
+    /* التبويبات */
     .stTabs [data-baseweb="tab"] {
         font-family: 'Tajawal', sans-serif !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         font-weight: 700 !important;
-        padding: 8px 12px !important;
+        padding: 8px 14px !important;
         color: #005980 !important;
+    }
+    .stTabs [aria-selected="true"] {
+        color: #005980 !important;
+        border-bottom-color: #005980 !important;
+    }
+
+    /* نصوص الحقول والقوائم */
+    label, p, span, .stSelectbox label {
+        color: #005980 !important;
+        font-weight: 600;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# 3. الخطة الدراسية المعتمدة
+# 3. الخطة الدراسية المعتمدة لبرنامج اللغة الإنجليزية والترجمة
 COURSES_DATA = [
     # المستوى 1
     {"id": "انجل-100", "level": 1, "code": "انجل 100", "name": "اللغة الإنجليزية", "hours": 6, "description": "مقرر اللغة الإنجليزية المكثف.", "tips": ["الممارسة اليومية وحل التدريبات أولاً بأول."]},
@@ -192,7 +215,7 @@ course_titles = [f"{c['code']} - {c['name']}" for c in display_courses]
 selected_idx = st.selectbox("📚 اختر المقرر الدراسي:", range(len(course_titles)), format_func=lambda x: course_titles[x])
 current_course = display_courses[selected_idx]
 
-# 6. بطاقة بيانات المقرر
+# 6. بطاقة تفاصيل المقرر
 st.markdown(f"""
     <div class="course-card">
         <h2>{current_course['name']}</h2>
@@ -202,7 +225,7 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# مسار مجلد المقرر لحفظ ملفاته
+# مسار مجلد المقرر
 course_folder = os.path.join(UPLOAD_DIR, current_course["id"])
 os.makedirs(course_folder, exist_ok=True)
 
@@ -242,7 +265,7 @@ with tab_upload:
     st.markdown("### 🔒 بوابة المشرف لرفع الملفات")
     st.caption(f"إضافة محتوى رسمي لمقرر: **{current_course['name']}**")
     
-    # الرمز السري الخاص بك
+    # الرمز السري للإدارة
     SECRET_CODE = "ksu2026"
     
     admin_password = st.text_input("أدخل الرمز السري للإدارة:", type="password", key=f"pwd_{current_course['id']}")
